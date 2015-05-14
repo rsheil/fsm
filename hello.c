@@ -2,6 +2,8 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
 
 
 #define CHAR_SIZE 20
@@ -26,13 +28,22 @@ typedef enum {
 	HEALTH 	= (0x1<<2)
 } ATTR_T;
 
+
+typedef struct{
+	unsigned int curr_exp;
+	unsigned int next_lvl_exp;		//need to have some external file to determine levels
+} exp_t;
+
 typedef struct {
+	unsigned int level; 	
+	exp_t exp;
 	unsigned int mana;
 	unsigned int magic;
 	unsigned int health;
 	unsigned int stamina;
 	unsigned int poop;		
 } attribute_t;	
+
 
 typedef struct{
 	int lat;
@@ -110,15 +121,56 @@ void print_char_stats(char_t *p_char){
 char action_commands[] ="\
 \twalk		\n\
 \trun		\n\
-\tpoop		\n";
+\tpoop		\n\
+\tstats		\n";
 
 
+void sig_handler(int sig){
+	switch(sig){
+	case SIGINT:
+		printf("caught SIGINT\n");
+		break;
+	default:
+		printf("caught %d\n",sig);
+		break;
+	}
+	abort();
+
+}
 
 
+/*
+	\note
+	
+	\feature request - tab competion
+	
+		example commands:
+		run WEST 10
+		walk NORTH 10
+		stats
+		stats	add	hello
+		
+*/
 
+///FIND COMMAND 
 
 void cmd_parser(char *cmd){
+	char *token;
+	char cmd_cpy[100];	
 
+	
+	strcpy(cmd_cpy,cmd);
+
+		
+	token=strtok(cmd_cpy," ");
+	while(token!=NULL){
+		printf("token = %s\n",token);
+			
+		token=strtok(NULL," ");
+	}
+	printf("cmd: %s",cmd);	
+	printf("cmd_cpy:%s\n",cmd_cpy);
+	
 }
 
 
@@ -142,10 +194,15 @@ void walk(char_t *p_char, dir_t direction){
 		break;
 
 	}
+	//add something here to check if the character landed on something awesome.
 }
 
+/*
+	\brief charcter will walk a direction until stamina is out
+	\note this might be dumb.
+*/
 void run(char_t *p_char, dir_t direction){
-
+	
 }
 
 
@@ -154,9 +211,25 @@ void print_help(){
 	printf("%s",action_commands);
 }
 
+
+
+//while loop and then parse 
+void init_game(){
+	char input[100];
+
+	while(1){
+		printf("what do you want to do? (walk, run, stats)\n");
+		fgets(input, 100, stdin);
+		//parse string
+		cmd_parser(input);
+	}
+}
+
 int main(){
 	char_t *p_char;
-	char name[] = "JAMES";
+	char name[] = "JAMES";	
+	
+	if(signal(SIGINT,sig_handler)==SIG_ERR); printf("error on sigint\n");
 	init_char(p_char,name);
 	print_char_stats(p_char);
 
@@ -169,7 +242,7 @@ int main(){
 	walk(p_char,WEST);
 	print_char_stats(p_char);
 		
-
+	init_game();
 
 return 0;
 
