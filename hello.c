@@ -160,9 +160,52 @@ void sig_handler(int sig){
 ///FIND COMMAND 
 
 
-void walk_cb(char *arg){
-	printf("walk_cb: %s\n",arg);
+// need to ,arg
 
+char *parse_cmd(const char cmd[]){
+
+char *token;
+token=strtok_r(cmd," ",&token);
+printf("in parse cmd: %s\n",token);
+return token;
+#if 0
+while(token!=NULL){
+
+	token=strtok_r(NULL," ",&token);
+}
+	attribute_t *p_attr = &p_char->attr;
+	loc_t *p_loc = &p_char->loc;
+	printf("-----CHARACTER STATS-----\n");	
+	printf("name:%s\n",p_char->name);
+	printf("location: %d, %d\n",p_loc->lat, p_loc->longi);
+#endif
+
+}
+
+// need to add a min/max
+// take walk_cb and add a way to move 'james' steps;
+// CURRENTLY ONLY MOVING IN LAT - need to walk based on DIRECTION 
+int walk_cb(char *arg,char_t *p_char){
+	char *james;
+	int walk;
+	loc_t *p_loc = &p_char->loc;
+	printf("walk_cb: %s\n",arg);
+	james=parse_cmd(arg);
+	printf("!!!!back in walk_cb: %s\n",james);
+
+	walk=atoi(james);
+	if(walk==0){
+		printf("ERROR: walk <int>\n");
+		return 1;
+	}
+
+	p_loc->lat++;
+	printf("adding to lat\n");
+	print_char_stats(p_char);	
+	
+
+	printf("!!!!!!atoi(james)=%d\n",walk);
+	return 0;
 }
 
 //need to fix the case where its a single variable - it captures the newline charter
@@ -181,10 +224,10 @@ int cmd_parser(char_t *p_char,char *cmd){
 	printf("token = %s\n",token);
 	
 	if (!strcmp(token,"walk")){
-		walk_cb(parsing_cmd);
+		walk_cb(parsing_cmd,p_char);
 	}
 	if (!strcmp(token,"poop")){
-		walk_cb(parsing_cmd);
+		return 0;
 	}
 	if (!strcmp(token,"stats")){
 		printf("in stats\n");
@@ -200,7 +243,7 @@ int cmd_parser(char_t *p_char,char *cmd){
 
 
 	
-	printf("cmd: %s\n",cmd);	
+//	printf("cmd: %s\n",cmd);	
 //	printf("cmd_cpy:%s\n",cmd_cpy);
 
 	return 0;
