@@ -69,6 +69,11 @@ typedef struct {
 
 
 
+/*
+FUNCTION POINTERS
+*/
+
+
 //attributes
 
 
@@ -154,22 +159,51 @@ void sig_handler(int sig){
 
 ///FIND COMMAND 
 
-void cmd_parser(char *cmd){
-	char *token;
-	char cmd_cpy[100];	
 
-	
+void walk_cb(char *arg){
+	printf("walk_cb: %s\n",arg);
+
+}
+
+//need to fix the case where its a single variable - it captures the newline charter
+
+
+
+int cmd_parser(char_t *p_char,char *cmd){
+	char *token;
+	char *parsing_cmd;	
+
+	char cmd_cpy[100];	
 	strcpy(cmd_cpy,cmd);
 
 		
-	token=strtok(cmd_cpy," ");
-	while(token!=NULL){
-		printf("token = %s\n",token);
-			
-		token=strtok(NULL," ");
+	token=strtok_r(cmd_cpy," ",&parsing_cmd);
+	printf("token = %s\n",token);
+	
+	if (!strcmp(token,"walk")){
+		walk_cb(parsing_cmd);
 	}
-	printf("cmd: %s",cmd);	
-	printf("cmd_cpy:%s\n",cmd_cpy);
+	if (!strcmp(token,"poop")){
+		walk_cb(parsing_cmd);
+	}
+	if (!strcmp(token,"stats")){
+		printf("in stats\n");
+		print_char_stats(p_char);
+	}	
+
+
+	//printf("parsing_cmd = %s\n", parsing_cmd);	
+//	token=strtok_r(NULL," ",&parsing_cmd);
+
+
+
+
+
+	
+	printf("cmd: %s\n",cmd);	
+//	printf("cmd_cpy:%s\n",cmd_cpy);
+
+	return 0;
 	
 }
 
@@ -214,14 +248,16 @@ void print_help(){
 
 
 //while loop and then parse 
-void init_game(){
+void init_game(char_t *p_char){
 	char input[100];
-
+	size_t ln;
 	while(1){
 		printf("what do you want to do? (walk, run, stats)\n");
 		fgets(input, 100, stdin);
+		ln=strlen(input)-1;
+		if(input[ln] == '\n') { input[ln]='\0';}
 		//parse string
-		cmd_parser(input);
+		cmd_parser(p_char,input);
 	}
 }
 
@@ -242,7 +278,7 @@ int main(){
 	walk(p_char,WEST);
 	print_char_stats(p_char);
 		
-	init_game();
+	init_game(p_char);
 
 return 0;
 
