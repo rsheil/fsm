@@ -162,7 +162,7 @@ void sig_handler(int sig){
 
 // need to ,arg
 
-char *parse_cmd(const char cmd[]){
+char *parse_cmd(char cmd[]){
 
 char *token;
 token=strtok_r(cmd," ",&token);
