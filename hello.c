@@ -44,12 +44,6 @@ typedef struct {
 	unsigned int poop;		
 } attribute_t;	
 
-
-typedef struct{
-	int lat;
-	int longi;//change these
-} loc_t;
-
 typedef enum{
 	NORTH 	= (0x1<<0),
 	SOUTH	= (0x1<<1),
@@ -57,13 +51,20 @@ typedef enum{
 	WEST	= (0x1<<3)	
 } dir_t;
 
+typedef struct{
+	int lat;
+	int longi;//change these
+	dir_t dir;
+} loc_t;
+
+
+
 typedef struct {
 	char name[CHAR_SIZE];
 	loc_t loc;
 	state_t state;
 	action_t action;
 	attribute_t attr;
-	
 } char_t;
 
 
@@ -96,11 +97,13 @@ void init_attribute(attribute_t *p_attr){
 	p_attr->health = 1;
 	p_attr->stamina = 1;
 	p_attr->poop = 1;
+	
 }
 
 void init_location(loc_t *loc){
 	loc->lat=0;
 	loc->longi=0;
+	loc->dir=NORTH;
 }
 
 void init_char(char_t *p_char, char *name){
@@ -161,24 +164,32 @@ void sig_handler(int sig){
 
 
 // need to ,arg
+// TODO would be nice if we had i created some ioctl structure
+// that would mean the command has to be parsed into some ioctl
+// transpose some structure in the do ioctl
+// example: have a default strucutre that passed - and then in the specific handler transpose struct
+
+
 
 char *parse_cmd(char cmd[]){
+	if (cmd == NULL){
+		printf("parse_cmd == NULL\n");
+	
+	}
+	char *token;
+	token=strtok_r(cmd," ",&token);
+	return token;
+	#if 0
+	while(token!=NULL){
 
-char *token;
-token=strtok_r(cmd," ",&token);
-printf("in parse cmd: %s\n",token);
-return token;
-#if 0
-while(token!=NULL){
-
-	token=strtok_r(NULL," ",&token);
-}
-	attribute_t *p_attr = &p_char->attr;
-	loc_t *p_loc = &p_char->loc;
-	printf("-----CHARACTER STATS-----\n");	
-	printf("name:%s\n",p_char->name);
-	printf("location: %d, %d\n",p_loc->lat, p_loc->longi);
-#endif
+		token=strtok_r(NULL," ",&token);
+	}
+		attribute_t *p_attr = &p_char->attr;
+		loc_t *p_loc = &p_char->loc;
+		printf("-----CHARACTER STATS-----\n");	
+		printf("name:%s\n",p_char->name);
+		printf("location: %d, %d\n",p_loc->lat, p_loc->longi);
+	#endif
 
 }
 
@@ -189,22 +200,26 @@ int walk_cb(char *arg,char_t *p_char){
 	char *james;
 	int walk;
 	loc_t *p_loc = &p_char->loc;
-	printf("walk_cb: %s\n",arg);
 	james=parse_cmd(arg);
-	printf("!!!!back in walk_cb: %s\n",james);
+	if(james==NULL){
+		printf("NO ACTION\n");
+		return 1;
+	}
 
 	walk=atoi(james);
 	if(walk==0){
 		printf("ERROR: walk <int>\n");
 		return 1;
 	}
+	
 
+	//walk based on the direction that you want you are facing
+	//can call void walk here
 	p_loc->lat++;
 	printf("adding to lat\n");
 	print_char_stats(p_char);	
 	
 
-	printf("!!!!!!atoi(james)=%d\n",walk);
 	return 0;
 }
 
@@ -221,8 +236,8 @@ int cmd_parser(char_t *p_char,char *cmd){
 
 		
 	token=strtok_r(cmd_cpy," ",&parsing_cmd);
-	printf("token = %s\n",token);
 	
+		
 	if (!strcmp(token,"walk")){
 		walk_cb(parsing_cmd,p_char);
 	}
