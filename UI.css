@@ -1,0 +1,95 @@
+h1{
+	background-color:red;
+	font-family: Garamond;
+	margin: auto;
+	color: white;
+	display:block;
+	padding: 20px
+	}
+
+
+#player{
+	border: 5px solid black;
+	text-align: center;
+	line-height: 50px;
+	color: black;
+	}
+
+span{
+	display: inline-block;
+	vertical-align: middle;
+	line-height: normal;
+	font-family: Garamond;
+	color: black;
+	font-size: 36px;
+	z-index: 1
+	position: relative;
+	}
+	
+	
+
+
+
+.Playerpkmn {
+	display:inline-block;
+	width: 400px;
+	height: 400px;
+	background-color: #B9D7D9;
+	margin: auto;
+	color: black;
+	background:url(http://37.media.tumblr.com/9f4b23ca255b3d82ee7462b5688483c2/tumblr_mi2kht5Qmq1rfk2ioo1_250.gif) no-repeat center center;
+}
+
+.opp{
+	display: inline-block;
+	width: 400px;
+	height: 400px;
+	background-color: #B9D7D9;
+	margin: auto;
+	background:url(http://media.tumblr.com/473cf9c0566205fd1fdc8d153b09712d/tumblr_inline_mjrw6apjud1qz4rgp.gif) no-repeat center center;
+}
+
+.buttons{
+	width: 1222.9px;
+    border: 5px solid black;
+    overflow: auto;
+	}
+	
+#b1,#b2,#b3,#b4{
+	float: left;
+	width: 275.7px;
+	height: 50px;
+	border: 5px solid black;
+	padding: 10px;
+	text-align: center;
+	font-family: Garamond;
+	font-size: 24px;
+	line-height: 50px;
+	
+	}
+
+#log{
+	clear: all;
+	width: 1217px;
+	border: 5px solid red;
+	height: 50px;
+	padding: 5px;
+	line-height: 2px;
+	}
+#ltex{
+	font-size: 30px;
+	font-family: Garamond;
+	}
+	
+	
+
+	
+	
+	
+
+
+	
+
+
+	
+	
